@@ -187,5 +187,34 @@ export const blogPost = defineType({
         }),
       ],
     }),
+
+    // ✅ NEW: Homepage Sections Selector
+    defineField({
+      name: 'homepageSections',
+      title: 'Homepage Sections',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {
+        list: [
+          {title: 'Featured', value: 'featured'},
+          {title: 'Slides', value: 'slides'},
+          {title: 'Main Titles', value: 'maintitles'},
+          {title: 'World News', value: 'worldnews'},
+          {title: 'Popular News', value: 'popularnews'},
+          {title: 'Editor Choice', value: 'editorchoice'},
+          {title: 'Latest News', value: 'latestnews'},
+        ],
+        layout: 'tags',
+      },
+      description: 'Select homepage sections where this post will appear',
+    }),
+
+    // ✅ NEW: Optional Section Priority
+    defineField({
+      name: 'sectionPriority',
+      title: 'Section Priority',
+      type: 'number',
+      description: 'Lower number means higher priority in homepage sections',
+    }),
   ],
 })
