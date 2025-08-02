@@ -142,6 +142,7 @@ export const blogPost = defineType({
       name: 'publishedAt',
       title: 'Published at',
       type: 'datetime',
+      initialValue: () => new Date().toISOString(),
     }),
 
     defineField({
@@ -190,31 +191,53 @@ export const blogPost = defineType({
 
     // ✅ NEW: Homepage Sections Selector
     defineField({
-      name: 'homepageSections',
-      title: 'Homepage Sections',
+      name: 'sectionAssignments',
+      title: 'Homepage Section Assignments',
       type: 'array',
-      of: [{type: 'string'}],
-      options: {
-        list: [
-          {title: 'Featured', value: 'featured'},
-          {title: 'Slides', value: 'slides'},
-          {title: 'Main Titles', value: 'maintitles'},
-          {title: 'World News', value: 'worldnews'},
-          {title: 'Popular News', value: 'popularnews'},
-          {title: 'Editor Choice', value: 'editorchoice'},
-          {title: 'Latest News', value: 'latestnews'},
-        ],
-        layout: 'tags',
-      },
-      description: 'Select homepage sections where this post will appear',
-    }),
-
-    // ✅ NEW: Optional Section Priority
-    defineField({
-      name: 'sectionPriority',
-      title: 'Section Priority',
-      type: 'number',
-      description: 'Lower number means higher priority in homepage sections',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'section',
+              title: 'Section',
+              type: 'string',
+              options: {
+                list: [
+                  {title: 'Featured', value: 'featured'},
+                  {title: 'Slides', value: 'slides'},
+                  {title: 'Main Titles', value: 'maintitles'},
+                  {title: 'World News', value: 'worldnews'},
+                  {title: 'Popular News', value: 'popularnews'},
+                  {title: 'Editor Choice', value: 'editorchoice'},
+                  {title: 'Latest News', value: 'latestnews'},
+                ],
+              },
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'priority',
+              title: 'Priority',
+              type: 'number',
+              description: 'Lower number means higher priority in this section',
+              validation: (Rule) => Rule.min(1),
+            },
+          ],
+          preview: {
+            select: {
+              title: 'section',
+              subtitle: 'priority',
+            },
+            prepare(selection) {
+              return {
+                title: selection.title,
+                subtitle: `Priority: ${selection.subtitle ?? 'None'}`,
+              }
+            },
+          },
+        },
+      ],
+      description: 'Assign this post to one or more homepage sections with specific priorities',
     }),
   ],
 })
